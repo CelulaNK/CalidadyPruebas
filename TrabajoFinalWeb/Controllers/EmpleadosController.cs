@@ -47,7 +47,7 @@ namespace TrabajoFinalWeb.Controllers
             return View();
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Registrar_Personal([Bind(Include = "ID,Contraseña,IdTipoEmpleado,Nombre,Celular,Correo,Direccion,Sueldo")] Empleado empleado)
         {
             if (ModelState.IsValid)
@@ -71,7 +71,7 @@ namespace TrabajoFinalWeb.Controllers
         
         [AllowAnonymous]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Contraseña,IdTipoEmpleado,Nombre,Celular,Correo,Direccion,Sueldo")] Empleado empleado)
         {
             if (ModelState.IsValid)
@@ -107,7 +107,7 @@ namespace TrabajoFinalWeb.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Contraseña,IdTipoEmpleado,Nombre,Celular,Correo,Direccion,Sueldo")] Empleado empleado)
         {
             if (ModelState.IsValid)
@@ -137,7 +137,7 @@ namespace TrabajoFinalWeb.Controllers
 
         // POST: Empleados/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
             Empleado empleado = db.Empleadoes.Find(id);
@@ -164,7 +164,7 @@ namespace TrabajoFinalWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Login([Bind(Include = "ID,Contraseña,IdTipoEmpleado,Nombre,Celular,Correo,Direccion,Sueldo")] Empleado user)
         {
             if (ModelState.IsValid)
@@ -233,7 +233,7 @@ namespace TrabajoFinalWeb.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Recuperar([Bind(Include = "ID,Contraseña,IdTipoEmpleado,Nombre,Celular,Correo,Direccion,Sueldo")] Empleado empleado)
         {
             var us = from u in db.Empleadoes.Include("TipoEmpleado")

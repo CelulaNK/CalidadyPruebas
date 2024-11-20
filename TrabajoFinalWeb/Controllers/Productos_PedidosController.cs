@@ -64,7 +64,7 @@ namespace TrabajoFinalWeb.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,IdProducto,IdPedido,Observacion")] Productos_Pedidos productos_Pedidos)
         {
             if (ModelState.IsValid)
@@ -100,7 +100,7 @@ namespace TrabajoFinalWeb.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,IdProducto,IdPedido,Observacion")] Productos_Pedidos productos_Pedidos)
         {
             if (ModelState.IsValid)
@@ -131,7 +131,7 @@ namespace TrabajoFinalWeb.Controllers
 
         // POST: Productos_Pedidos/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             Productos_Pedidos productos_Pedidos = db.Productos_Pedidos.Find(id);
@@ -163,7 +163,7 @@ namespace TrabajoFinalWeb.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Orden(int id,int ncontador)
         {
             //Producto producto = db.Productoes.Find(id);

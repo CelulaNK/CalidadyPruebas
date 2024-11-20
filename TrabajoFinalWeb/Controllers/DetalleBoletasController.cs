@@ -82,7 +82,7 @@ namespace TrabajoFinalWeb.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,IdPedido,MontoTotal,IdModoDePago")] DetalleBoleta detalleBoleta)
         {
             if (ModelState.IsValid)
@@ -118,7 +118,7 @@ namespace TrabajoFinalWeb.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,IdPedido,MontoTotal,IdModoDePago")] DetalleBoleta detalleBoleta)
         {
             if (ModelState.IsValid)
@@ -149,7 +149,7 @@ namespace TrabajoFinalWeb.Controllers
 
         // POST: DetalleBoletas/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             DetalleBoleta detalleBoleta = db.DetalleBoletas.Find(id);
@@ -170,7 +170,7 @@ namespace TrabajoFinalWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Pedido_Boleta()
         {
             int indice = (from c in db.PS select c).Count();
@@ -197,7 +197,7 @@ namespace TrabajoFinalWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult RegistrarPedido(int IdModoDePago)
         {
             IEnumerable<TrabajoFinalWeb.Models.P> lista = Getpedidos();
@@ -206,19 +206,19 @@ namespace TrabajoFinalWeb.Controllers
             Pedido pedido = new Pedido();
             Empleado objUser = (Empleado)Session[SessionName.User];
 
-            // Configuración del pedido
+            
             pedido.Atendido = (bool)lista.ElementAt(0).Atendido;
             pedido.Detalle = objUser.Nombre;
             pedido.IdEmpleado = "ADMINMax";
 
-            // Guardar el pedido y obtener su ID
+            
             db.Pedidoes.Add(pedido);
             db.SaveChanges();
 
-            // Obtener el ID del pedido recién insertado
+            
             int id_Pedido = pedido.ID;
 
-            // Agregar productos asociados al pedido
+            
             for (int i = 0; i < db.PPS.Count(); i++)
             {
                 Productos_Pedidos producto_pedido = new Productos_Pedidos
@@ -230,7 +230,7 @@ namespace TrabajoFinalWeb.Controllers
             }
             db.SaveChanges();
 
-            // Crear y guardar el detalle de boleta
+            
             DetalleBoleta detalle = new DetalleBoleta
             {
                 IdModoDePago = IdModoDePago,
@@ -242,18 +242,18 @@ namespace TrabajoFinalWeb.Controllers
             db.DetalleBoletas.Add(detalle);
             db.SaveChanges();
 
-            // Limpiar los datos temporales
+            
             db.eliminarTodo();
             db.SaveChanges();
 
-            // Cargar el detalle de boleta completo con todas sus relaciones
+            
             var detalleBoleta = db.DetalleBoletas
-                .Include(d => d.ModoDePago)          // Medio de pago
-                .Include(d => d.Pedido)              // Pedido relacionado
-                .Include(d => d.Pedido.Empleado)     // Cliente (empleado que generó el pedido)
+                .Include(d => d.ModoDePago)          
+                .Include(d => d.Pedido)              
+                .Include(d => d.Pedido.Empleado)     
                 .FirstOrDefault(d => d.IdPedido == id_Pedido);
 
-            // Enviar el objeto completo en una lista a la vista
+            
             return View("Index_Especifico", new List<DetalleBoleta> { detalleBoleta });
         }
 
