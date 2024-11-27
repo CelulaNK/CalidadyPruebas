@@ -4,16 +4,15 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Detalles de la Boleta</h2>
 
 <div>
-    <h4>DetalleBoleta</h4>
+    <h4>Detalle de la Boleta</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.MontoTotal)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.MontoTotal)
         </dd>
@@ -21,7 +20,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.ModoDePago.Descripcion)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.ModoDePago.Descripcion)
         </dd>
@@ -29,14 +27,43 @@
         <dt>
             @Html.DisplayNameFor(model => model.Pedido.Detalle)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Pedido.Detalle)
         </dd>
-
     </dl>
 </div>
+
+<h3>Productos del Pedido</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Precio</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Pedido != null && Model.Pedido.Productos_Pedidos != null)
+        {
+            foreach (var productoPedido in Model.Pedido.Productos_Pedidos)
+            {
+                <tr>
+                    <td>@productoPedido.Producto.Nombre</td>
+                    <td>@productoPedido.Producto.Precio.ToString("C")</td>
+                    
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4" class="text-center">No hay productos asociados a este pedido.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Editar", "Edit", new { id = Model.ID }, new { @class = "btn btn-primary" }) |
+    @Html.ActionLink("Regresar a la lista", "Index", null, new { @class = "btn btn-secondary" })
 </p>

@@ -47,7 +47,7 @@ namespace TrabajoFinalWeb.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Atendido,Detalle,IdEmpleado")] Pedido pedido)
         {
             if (ModelState.IsValid)
@@ -81,7 +81,7 @@ namespace TrabajoFinalWeb.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Atendido,Detalle,IdEmpleado")] Pedido pedido)
         {
             if (ModelState.IsValid)
@@ -111,7 +111,7 @@ namespace TrabajoFinalWeb.Controllers
 
         // POST: Pedidos/Delete/5
         [HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             Pedido pedido = db.Pedidoes.Find(id);

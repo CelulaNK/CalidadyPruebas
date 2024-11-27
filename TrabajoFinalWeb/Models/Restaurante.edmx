@@ -71,6 +71,7 @@
           <Property Name="Precio" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="Descripcion" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="imagen" Type="nvarchar" MaxLength="50" />
+          <Property Name="Stock" Type="int" />
         </EntityType>
         <EntityType Name="Productos_Pedidos">
           <Key>
@@ -80,6 +81,7 @@
           <Property Name="IdProducto" Type="int" Nullable="false" />
           <Property Name="IdPedido" Type="int" Nullable="false" />
           <Property Name="Observacion" Type="nvarchar" MaxLength="50" />
+          <Property Name="Cantidad" Type="int" />
         </EntityType>
         <EntityType Name="PS">
           <Key>
@@ -344,6 +346,7 @@
           <Property Name="Observacion" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Producto" Relationship="RestauranteModel.FK_Productos_Pedidos_Producto" FromRole="Productos_Pedidos" ToRole="Producto" />
           <NavigationProperty Name="Pedido" Relationship="RestauranteModel.FK_Productos_Pedidos_Pedido" FromRole="Productos_Pedidos" ToRole="Pedido" />
+          <Property Name="Cantidad" Type="Int32" />
         </EntityType>
         <EntityType Name="TipoEmpleado">
           <Key>
@@ -469,6 +472,7 @@
           <NavigationProperty Name="PPS" Relationship="RestauranteModel.FK_PPS_Producto" FromRole="Producto" ToRole="PP" />
           <NavigationProperty Name="TipoProducto" Relationship="RestauranteModel.FK_Producto_TipoProducto" FromRole="Producto" ToRole="TipoProducto" />
           <NavigationProperty Name="Productos_Pedidos" Relationship="RestauranteModel.FK_Productos_Pedidos_Producto" FromRole="Producto" ToRole="Productos_Pedidos" />
+          <Property Name="Stock" Type="Int32" />
         </EntityType>
         <Association Name="FK_PPS_Producto">
           <End Type="RestauranteModel.Producto" Role="Producto" Multiplicity="0..1" />
@@ -652,6 +656,7 @@
           <EntitySetMapping Name="Productos_Pedidos">
             <EntityTypeMapping TypeName="RestauranteModel.Productos_Pedidos">
               <MappingFragment StoreEntitySet="Productos_Pedidos">
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
                 <ScalarProperty Name="IdPedido" ColumnName="IdPedido" />
@@ -689,6 +694,7 @@
           <EntitySetMapping Name="Productoes">
             <EntityTypeMapping TypeName="RestauranteModel.Producto">
               <MappingFragment StoreEntitySet="Producto">
+                <ScalarProperty Name="Stock" ColumnName="Stock" />
                 <ScalarProperty Name="imagen" ColumnName="imagen" />
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
                 <ScalarProperty Name="Precio" ColumnName="Precio" />

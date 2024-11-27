@@ -48,7 +48,7 @@ namespace TrabajoFinalWeb.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Descripcion")] ModoDePago modoDePago)
         {
             if (ModelState.IsValid)
@@ -80,7 +80,7 @@ namespace TrabajoFinalWeb.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Descripcion")] ModoDePago modoDePago)
         {
             if (ModelState.IsValid)
@@ -109,7 +109,7 @@ namespace TrabajoFinalWeb.Controllers
 
         // POST: ModoDePagos/Delete/5
         [HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             ModoDePago modoDePago = db.ModoDePagoes.Find(id);

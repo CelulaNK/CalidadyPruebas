@@ -62,11 +62,18 @@ namespace TrabajoFinalWeb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DetalleBoleta detalleBoleta = db.DetalleBoletas.Find(id);
+
+            // Incluir productos relacionados al pedido de la boleta
+            var detalleBoleta = db.DetalleBoletas
+                .Include(d => d.Pedido)
+                .Include(d => d.Pedido.Productos_Pedidos.Select(p => p.Producto)) // Incluir productos
+                .FirstOrDefault(d => d.ID == id);
+
             if (detalleBoleta == null)
             {
                 return HttpNotFound();
             }
+
             return View(detalleBoleta);
         }
 
@@ -82,20 +89,43 @@ namespace TrabajoFinalWeb.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,IdPedido,MontoTotal,IdModoDePago")] DetalleBoleta detalleBoleta)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(
+        [Bind(Include = "ID,IdPedido,MontoTotal,IdModoDePago")] DetalleBoleta detalleBoleta,
+        string NumeroTarjeta,
+        string NombreTitular,
+        string FechaExpiracion,
+        string CVV)
         {
             if (ModelState.IsValid)
             {
+                if (detalleBoleta.IdModoDePago == 2) // Suponiendo que 2 es el ID para "tarjeta"
+                {
+                    if (string.IsNullOrWhiteSpace(NumeroTarjeta) || string.IsNullOrWhiteSpace(NombreTitular) ||
+                        string.IsNullOrWhiteSpace(FechaExpiracion) || string.IsNullOrWhiteSpace(CVV))
+                    {
+                        ModelState.AddModelError("", "Debe completar todos los campos de la tarjeta.");
+                        ViewBag.ModosDePago = db.ModoDePagoes.ToList();
+                        return View(detalleBoleta);
+                    }
+
+                    // Datos ficticios para fines académicos (solo imprime en consola)
+                    System.Diagnostics.Debug.WriteLine("Número de Tarjeta: " + NumeroTarjeta);
+                    System.Diagnostics.Debug.WriteLine("Nombre del Titular: " + NombreTitular);
+                    System.Diagnostics.Debug.WriteLine("Fecha de Expiración: " + FechaExpiracion);
+                    System.Diagnostics.Debug.WriteLine("CVV: " + CVV);
+                }
+
                 db.DetalleBoletas.Add(detalleBoleta);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.IdModoDePago = new SelectList(db.ModoDePagoes, "ID", "Descripcion", detalleBoleta.IdModoDePago);
-            ViewBag.IdPedido = new SelectList(db.Pedidoes, "ID", "Detalle", detalleBoleta.IdPedido);
+            ViewBag.ModosDePago = db.ModoDePagoes.ToList();
             return View(detalleBoleta);
         }
+
+
 
         // GET: DetalleBoletas/Edit/5
         public ActionResult Edit(int? id)
@@ -118,7 +148,7 @@ namespace TrabajoFinalWeb.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,IdPedido,MontoTotal,IdModoDePago")] DetalleBoleta detalleBoleta)
         {
             if (ModelState.IsValid)
@@ -149,7 +179,7 @@ namespace TrabajoFinalWeb.Controllers
 
         // POST: DetalleBoletas/Delete/5
         [HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             DetalleBoleta detalleBoleta = db.DetalleBoletas.Find(id);
@@ -170,7 +200,7 @@ namespace TrabajoFinalWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult Pedido_Boleta()
         {
             int indice = (from c in db.PS select c).Count();
@@ -197,7 +227,7 @@ namespace TrabajoFinalWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult RegistrarPedido(int IdModoDePago)
         {
             IEnumerable<TrabajoFinalWeb.Models.P> lista = Getpedidos();
@@ -206,56 +236,74 @@ namespace TrabajoFinalWeb.Controllers
             Pedido pedido = new Pedido();
             Empleado objUser = (Empleado)Session[SessionName.User];
 
-            
             pedido.Atendido = (bool)lista.ElementAt(0).Atendido;
             pedido.Detalle = objUser.Nombre;
             pedido.IdEmpleado = "ADMINMax";
 
-            
             db.Pedidoes.Add(pedido);
             db.SaveChanges();
 
-            
             int id_Pedido = pedido.ID;
 
-            
-            for (int i = 0; i < db.PPS.Count(); i++)
+            for (int i = 0; i < listaPP.Count(); i++)
             {
                 Productos_Pedidos producto_pedido = new Productos_Pedidos
                 {
                     IdPedido = id_Pedido,
-                    IdProducto = (int)listaPP.ElementAt(i).IdProducto
+                    IdProducto = (int)listaPP.ElementAt(i).IdProducto,
+                    Cantidad = 1 // Ajusta según sea necesario
                 };
+
+                // Actualizar el stock del producto
+                var producto = db.Productoes.Find(producto_pedido.IdProducto);
+                if (producto != null)
+                {
+                    if (producto.Stock >= producto_pedido.Cantidad)
+                    {
+                        producto.Stock -= producto_pedido.Cantidad;
+                        db.Entry(producto).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        // Mostrar mensaje al usuario y cancelar toda la operación si no hay suficiente stock
+                        ModelState.AddModelError("", $"El producto {producto.Nombre} no tiene suficiente stock. Disponibles: {producto.Stock}");
+
+                        // Restaurar transacciones si se necesita
+                        db.Pedidoes.Remove(pedido); // Eliminar el pedido recién creado
+                        db.SaveChanges();
+                        return View("Index");
+                    }
+                }
+
                 db.Productos_Pedidos.Add(producto_pedido);
             }
+
             db.SaveChanges();
 
-            
             DetalleBoleta detalle = new DetalleBoleta
             {
                 IdModoDePago = IdModoDePago,
                 IdPedido = id_Pedido,
-                MontoTotal = (from a in db.Productos_Pedidos
-                              where a.IdPedido == id_Pedido
-                              select a.Producto.Precio).Sum()
+                MontoTotal = (decimal)(from a in db.Productos_Pedidos
+                                       where a.IdPedido == id_Pedido
+                                       select (a.Producto.Precio * a.Cantidad)).Sum()
             };
+
             db.DetalleBoletas.Add(detalle);
             db.SaveChanges();
 
-            
             db.eliminarTodo();
             db.SaveChanges();
 
-            
             var detalleBoleta = db.DetalleBoletas
-                .Include(d => d.ModoDePago)          
-                .Include(d => d.Pedido)              
-                .Include(d => d.Pedido.Empleado)     
+                .Include(d => d.ModoDePago)
+                .Include(d => d.Pedido.Productos_Pedidos.Select(p => p.Producto)) // Incluir productos
                 .FirstOrDefault(d => d.IdPedido == id_Pedido);
 
-            
             return View("Index_Especifico", new List<DetalleBoleta> { detalleBoleta });
         }
+
+
 
 
 

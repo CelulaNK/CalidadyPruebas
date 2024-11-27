@@ -6,15 +6,15 @@
 
 <h2>Create</h2>
 
-
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>DetalleBoleta</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
         <div class="form-group">
             @Html.LabelFor(model => model.IdPedido, "IdPedido", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -32,12 +32,41 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.IdModoDePago, "IdModoDePago", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.IdModoDePago, "Método de Pago", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("IdModoDePago", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("IdModoDePago", new SelectList(ViewBag.ModosDePago, "ID", "Descripcion"), "Seleccione un modo de pago", new { @class = "form-control", @id = "modoDePago" })
                 @Html.ValidationMessageFor(model => model.IdModoDePago, "", new { @class = "text-danger" })
             </div>
         </div>
+
+        <!-- Campos adicionales para tarjeta -->
+        <div id="tarjetaInfo" style="display: none;">
+            <div class="form-group">
+                <label class="control-label col-md-2">Número de Tarjeta</label>
+                <div class="col-md-10">
+                    <input type="text" name="NumeroTarjeta" class="form-control" placeholder="Ingrese el número de tarjeta" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Nombre del Titular</label>
+                <div class="col-md-10">
+                    <input type="text" name="NombreTitular" class="form-control" placeholder="Nombre del titular de la tarjeta" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Fecha de Expiración</label>
+                <div class="col-md-10">
+                    <input type="month" name="FechaExpiracion" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">CVV</label>
+                <div class="col-md-10">
+                    <input type="text" name="CVV" class="form-control" placeholder="CVV" maxlength="3" />
+                </div>
+            </div>
+        </div>
+
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -53,4 +82,20 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $('#modoDePago').change(function () {
+                // Obtén el texto seleccionado en el dropdown
+                var selectedText = $("#modoDePago option:selected").text().toLowerCase();
+
+                // Muestra u oculta los campos según el texto seleccionado
+                if (selectedText === "tarjeta") {
+                    $('#tarjetaInfo').show();
+                } else {
+                    $('#tarjetaInfo').hide();
+                }
+            });
+        });
+    </script>
 }
+

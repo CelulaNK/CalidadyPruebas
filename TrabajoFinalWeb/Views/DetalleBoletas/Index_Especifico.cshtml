@@ -2,35 +2,59 @@
 
 <body class="subpage">
 
-    <h2>Pedido en Especifico</h2>
+    <h2>Pedido en Específico</h2>
     <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MontoTotal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModoDePago.Descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Pedido.Detalle)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MontoTotal)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ModoDePago.Descripcion)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Pedido.Detalle)
-                </td>
+                <th>Monto Total</th>
+                <th>Modo de Pago</th>
+                <th>Cliente</th>
+                <th>Productos</th>
             </tr>
-        }
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.MontoTotal)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ModoDePago.Descripcion)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Pedido.Detalle)</td>
+                    <td>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (item.Pedido != null && item.Pedido.Productos_Pedidos != null)
+                                {
+                                    foreach (var productoPedido in item.Pedido.Productos_Pedidos)
+                                    {
+                                        if (productoPedido.Producto != null)
+                                        {
+                                            <tr>
+                                                <td>@productoPedido.Producto.Nombre</td>
+                                                <td>@productoPedido.Cantidad</td>
+                                                <td>@productoPedido.Producto.Precio.ToString("C")</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4">No hay productos asociados a este pedido.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 
 </body>

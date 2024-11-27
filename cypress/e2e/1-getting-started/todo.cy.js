@@ -240,8 +240,8 @@ describe('Productos', () => {
     cy.url().should('eq', 'http://localhost:1287/Productoes/Index');
     
   })
-
 })
+
 
   describe('Empleados', () => {
     it('Administrar Empleados', () =>{
@@ -306,7 +306,7 @@ describe('Pedidos', () => {
     cy.get('.btn:nth-child(2)').click();
     cy.get('form').submit();
 
-    cy.url().should('eq', 'http://localhost:1287/DetalleBoletas/Index_Especifico');
+    cy.contains('Pedido en Específico').should('be.visible');
 
   })
 
