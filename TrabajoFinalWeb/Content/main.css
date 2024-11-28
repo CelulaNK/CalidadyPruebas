@@ -14,7 +14,6 @@
 		margin: 0;
 		padding: 0;
 		border: 0;
-		font-size: 100%;
 		font: inherit;
 		vertical-align: baseline;
 	}
@@ -2108,7 +2107,7 @@
 		.select-wrapper:before {
 			-moz-osx-font-smoothing: grayscale;
 			-webkit-font-smoothing: antialiased;
-			font-family: FontAwesome;
+			font-family: FontAwesome, sans-serif;
 			font-style: normal;
 			font-weight: normal;
 			text-transform: none !important;
@@ -2172,7 +2171,7 @@
 			input[type="radio"] + label:before {
 				-moz-osx-font-smoothing: grayscale;
 				-webkit-font-smoothing: antialiased;
-				font-family: FontAwesome;
+				font-family: FontAwesome, sans-serif;
 				font-style: normal;
 				font-weight: normal;
 				text-transform: none !important;
@@ -2307,7 +2306,7 @@
 		.icon:before {
 			-moz-osx-font-smoothing: grayscale;
 			-webkit-font-smoothing: antialiased;
-			font-family: FontAwesome;
+			font-family: FontAwesome, sans-serif;
 			font-style: normal;
 			font-weight: normal;
 			text-transform: none !important;
@@ -3757,7 +3756,6 @@
 			padding: 0 0.75em;
 			color: inherit;
 			text-decoration: none;
-			color: #FFF;
 		}
 
 			#header > a:hover {
@@ -3773,7 +3771,7 @@
 					content: "";
 					-moz-osx-font-smoothing: grayscale;
 					-webkit-font-smoothing: antialiased;
-					font-family: FontAwesome;
+					font-family: FontAwesome, sans-serif;
 					font-style: normal;
 					font-weight: normal;
 					text-transform: none !important;
@@ -3954,7 +3952,7 @@
 			#menu .close:before {
 				-moz-osx-font-smoothing: grayscale;
 				-webkit-font-smoothing: antialiased;
-				font-family: FontAwesome;
+				font-family: FontAwesome, sans-serif;
 				font-style: normal;
 				font-weight: normal;
 				text-transform: none !important;

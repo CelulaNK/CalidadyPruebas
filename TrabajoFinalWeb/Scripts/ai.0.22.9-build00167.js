@@ -1,4 +1,4 @@
-var Microsoft;
+    var Microsoft;
 (function (Microsoft) {
     var ApplicationInsights;
     (function (ApplicationInsights) {
@@ -357,7 +357,8 @@ var Microsoft;
             Util.trim = function (str) {
                 if (typeof str !== "string")
                     return str;
-                return str.replace(/^\s+|\s+$/g, "");
+                return str.replace(/(^\s+)|(\s+$)/g, "");
+
             };
             Util.newId = function () {
                 var base64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -1912,9 +1913,10 @@ var Microsoft;
                             var tempProps = {};
                             for (var prop in properties) {
                                 var value = DataSanitizer.sanitizeString(properties[prop]);
-                                prop = DataSanitizer.sanitizeKeyAndAddUniqueness(prop, tempProps);
-                                tempProps[prop] = value;
+                                var sanitizedKey = DataSanitizer.sanitizeKeyAndAddUniqueness(prop, tempProps); // Nueva variable
+                                tempProps[sanitizedKey] = value;
                             }
+
                             properties = tempProps;
                         }
                         return properties;
@@ -1924,9 +1926,10 @@ var Microsoft;
                             var tempMeasurements = {};
                             for (var measure in measurements) {
                                 var value = measurements[measure];
-                                measure = DataSanitizer.sanitizeKeyAndAddUniqueness(measure, tempMeasurements);
-                                tempMeasurements[measure] = value;
+                                var sanitizedKey = DataSanitizer.sanitizeKeyAndAddUniqueness(measure, tempMeasurements); // Nueva variable
+                                tempMeasurements[sanitizedKey] = value;
                             }
+
                             measurements = tempMeasurements;
                         }
                         return measurements;
@@ -3091,8 +3094,8 @@ var Microsoft;
                 };
                 this._pageVisitTimeManager = new ApplicationInsights.Telemetry.PageVisitTimeManager(function (pageName, pageUrl, pageVisitTime) { return _this.trackPageVisitTime(pageName, pageUrl, pageVisitTime); });
                 if (!this.config.disableAjaxTracking) {
-                    new Microsoft.ApplicationInsights.AjaxMonitor(this);
                 }
+
             }
             AppInsights.prototype.sendPageViewInternal = function (name, url, duration, properties, measurements) {
                 var pageView = new ApplicationInsights.Telemetry.PageView(name, url, duration, properties, measurements);

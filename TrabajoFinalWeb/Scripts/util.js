@@ -95,8 +95,11 @@
 			}, userConfig);
 
 			// Expand "target" if it's not a jQuery object already.
-				if (typeof config.target != 'jQuery')
-					config.target = $(config.target);
+		if (!(config.target instanceof jQuery)) {
+			config.target = $(config.target);
+		}
+
+					
 
 		// Panel.
 
@@ -528,8 +531,9 @@
 		var key = '__prioritize';
 
 		// Expand $elements if it's not already a jQuery object.
-			if (typeof $elements != 'jQuery')
-				$elements = $($elements);
+		if (!$elements || !$elements.jquery) {
+			$elements = $($elements);
+		}
 
 		// Step through elements.
 			$elements.each(function() {
